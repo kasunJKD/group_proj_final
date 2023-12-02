@@ -1,0 +1,85 @@
+﻿@model WebApplication1.Models.PlaneModels
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>PlaneModels</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FuselageInventoryId" class="control-label"></label>
+                <select asp-for="FuselageInventoryId" class="form-control" asp-items="ViewBag.FuselageInventoryId"></select>
+                <span asp-validation-for="FuselageInventoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WingsInventoryId" class="control-label"></label>
+                <select asp-for="WingsInventoryId" class="form-control" asp-items="ViewBag.WingsInventoryId"></select>
+                <span asp-validation-for="WingsInventoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Wing_Count" class="control-label"></label>
+                <input asp-for="Wing_Count" class="form-control" />
+                <span asp-validation-for="Wing_Count" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EngineInventoryId" class="control-label"></label>
+                <select asp-for="EngineInventoryId" class="form-control" asp-items="ViewBag.EngineInventoryId"></select>
+                <span asp-validation-for="EngineInventoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Engine_Count" class="control-label"></label>
+                <input asp-for="Engine_Count" class="form-control" />
+                <span asp-validation-for="Engine_Count" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Max_Range" class="control-label"></label>
+                <input asp-for="Max_Range" class="form-control" />
+                <span asp-validation-for="Max_Range" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Length" class="control-label"></label>
+                <input asp-for="Length" class="form-control" />
+                <span asp-validation-for="Length" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Width" class="control-label"></label>
+                <input asp-for="Width" class="form-control" />
+                <span asp-validation-for="Width" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BasePrice" class="control-label"></label>
+                <input asp-for="BasePrice" class="form-control" />
+                <span asp-validation-for="BasePrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Image_url" class="control-label"></label>
+                <input asp-for="Image_url" class="form-control" />
+                <span asp-validation-for="Image_url" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

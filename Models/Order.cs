@@ -3,8 +3,11 @@
     public class Order
     {
         public int Id { get; set; }
+        public string UserId { get; set; }
         public ApplicationUser User { get; set; }
+        public int OrderedModelId { get; set; }
         public PlaneModels OrderedModel { get; set; }
+        public int CustomOrderId { get; set; }
         public Order_Customizations CustomOrder { get; set; }
         public double Customization_Price { get; set; }
         public double Total_Price { get;set; }

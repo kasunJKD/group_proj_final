@@ -4,6 +4,7 @@ using WebApplication1.Models;
 using WebApplication1.Data;
 using WebApplication1.Utilities;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using WebApplication1.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("WebApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'WebApplicationDbContextConnection' not found.");
@@ -14,6 +15,8 @@ builder.Services.AddDbContext<WebApplicationDbContext>(options =>
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<WebApplicationDbContext>().AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+builder.Services.AddScoped<ICatalogRepository, CatalogRepository>();
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();

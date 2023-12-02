@@ -267,9 +267,6 @@ namespace WebApplication1.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PlaneModelsId")
-                        .HasColumnType("int");
-
                     b.Property<double>("Price_Per_Unit")
                         .HasColumnType("float");
 
@@ -277,8 +274,6 @@ namespace WebApplication1.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PlaneModelsId");
 
                     b.ToTable("Inventory");
                 });
@@ -343,6 +338,7 @@ namespace WebApplication1.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -444,7 +440,11 @@ namespace WebApplication1.Migrations
                     b.Property<DateTime>("Estimated_DateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ShippingOrderId")
+                    b.Property<string>("OrderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrderId1")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -455,9 +455,9 @@ namespace WebApplication1.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ShippingOrderId");
+                    b.HasIndex("OrderId1");
 
-                    b.ToTable("Feedbacks");
+                    b.ToTable("Shipping");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -511,13 +511,6 @@ namespace WebApplication1.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WebApplication1.Models.Inventory", b =>
-                {
-                    b.HasOne("WebApplication1.Models.PlaneModels", null)
-                        .WithMany("Inventories")
-                        .HasForeignKey("PlaneModelsId");
-                });
-
             modelBuilder.Entity("WebApplication1.Models.Manufacture", b =>
                 {
                     b.HasOne("WebApplication1.Models.Order", "Order")
@@ -545,7 +538,9 @@ namespace WebApplication1.Migrations
 
                     b.HasOne("WebApplication1.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("CustomOrder");
 
@@ -594,18 +589,13 @@ namespace WebApplication1.Migrations
 
             modelBuilder.Entity("WebApplication1.Models.Shipping", b =>
                 {
-                    b.HasOne("WebApplication1.Models.Order", "ShippingOrder")
+                    b.HasOne("WebApplication1.Models.Order", "Order")
                         .WithMany()
-                        .HasForeignKey("ShippingOrderId")
+                        .HasForeignKey("OrderId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ShippingOrder");
-                });
-
-            modelBuilder.Entity("WebApplication1.Models.PlaneModels", b =>
-                {
-                    b.Navigation("Inventories");
+                    b.Navigation("Order");
                 });
 #pragma warning restore 612, 618
         }

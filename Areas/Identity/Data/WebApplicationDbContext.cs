@@ -28,5 +28,5 @@ public class WebApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Manufacture> Manufacture { get; set; }
     public DbSet<Order_Customizations> Order_Customizations { get; set; }
     public DbSet<Order> Order { get; set; }
-    public DbSet<Shipping> Feedbacks { get; set; }
+    public DbSet<Shipping> Shipping { get; set; }
 }
