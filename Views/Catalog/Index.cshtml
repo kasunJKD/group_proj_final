@@ -55,17 +55,26 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
-            <td>
+            <td hidden>
                 @Html.DisplayFor(modelItem => item.FuselageInventory.Id)
             </td>
-            <td>
+            <td hidden>
                 @Html.DisplayFor(modelItem => item.WingsInventory.Id)
+            </td>
+            <td >
+                @Html.DisplayFor(modelItem => item.FuselageInventory.Name)
+            </td>
+            <td >
+                @Html.DisplayFor(modelItem => item.WingsInventory.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Wing_Count)
             </td>
-            <td>
+            <td hidden>
                 @Html.DisplayFor(modelItem => item.EngineInventory.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EngineInventory.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Engine_Count)
@@ -83,7 +92,7 @@
                 @Html.DisplayFor(modelItem => item.BasePrice)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Image_url)
+                <img src="data:image/png;base64, @item.Image_url" alt="Plane Image" />
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
