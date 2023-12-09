@@ -66,9 +66,18 @@
             </div>
             <div class="form-group">
                 <label asp-for="Image_url" class="control-label"></label>
-                <input asp-for="Image_url" class="form-control" />
+                <input type="file" id="imageInput" class="form-control" />
+                <img id="imagePreview" src="#" alt="Preview" style="display: none; max-width: 100%; max-height: 200px;" />
+
+                @if (!string.IsNullOrEmpty(Model.Image_url))
+                {
+                    <img src="data:image/png;base64,@Model.Image_url" alt="Current Image" style="max-width: 100%; max-height: 200px;" />
+                }
+
+                <input type="hidden" asp-for="Image_url" id="base64Image" />
                 <span asp-validation-for="Image_url" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -82,4 +91,27 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        document.getElementById('imageInput').addEventListener('change', function (e) {
+            var fileInput = e.target;
+            var imagePreview = document.getElementById('imagePreview');
+            var base64ImageInput = document.getElementById('base64Image');
+
+            if (fileInput.files && fileInput.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+
+                    // Convert the image to base64 and set the value in the hidden input
+                    var base64Image = e.target.result.split(',')[1];
+                    base64ImageInput.value = base64Image;
+                };
+
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        });
+    </script>
 }

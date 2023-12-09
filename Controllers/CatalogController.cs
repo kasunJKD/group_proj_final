@@ -7,26 +7,40 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
 using WebApplication1.Models;
-using WebApplication1.Repository;
 
 namespace WebApplication1.Controllers
 {
     public class CatalogController : Controller
     {
         private readonly WebApplicationDbContext _context;
-        private ICatalogRepository _catalogRepository;
 
-        public CatalogController(WebApplicationDbContext context, ICatalogRepository catalogRepository)
+        public CatalogController(WebApplicationDbContext context)
         {
             _context = context;
-            _catalogRepository = catalogRepository;
         }
 
         // GET: Catalog
         public async Task<IActionResult> Index()
         {
-            var webApplicationDbContext = _context.PlaneModels.Include(p => p.EngineInventory).Include(p => p.FuselageInventory).Include(p => p.WingsInventory);
-            return View(await _catalogRepository.GetPlaneModels());
+            try
+            {
+                var planeModels = await _context.PlaneModels
+                    .Include(p => p.EngineInventory)
+                    .Include(p => p.FuselageInventory)
+                    .Include(p => p.WingsInventory)
+                    .Where(p =>
+                        p.FuselageInventory.AvailableCount > 5 &&
+                        p.WingsInventory.AvailableCount >= p.Wing_Count &&
+                        p.EngineInventory.AvailableCount >= p.Engine_Count)
+                    .ToListAsync();
+
+                return View(planeModels);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return View(new List<PlaneModels>());
+            }
         }
 
         // GET: Catalog/Details/5
@@ -53,9 +67,9 @@ namespace WebApplication1.Controllers
         // GET: Catalog/Create
         public IActionResult Create()
         {
-            ViewData["EngineInventoryId"] = new SelectList(_context.Inventory, "Id", "Id");
-            ViewData["FuselageInventoryId"] = new SelectList(_context.Inventory, "Id", "Id");
-            ViewData["WingsInventoryId"] = new SelectList(_context.Inventory, "Id", "Id");
+            ViewData["EngineInventoryId"] = new SelectList(_context.Inventory, "Id", "Name");
+            ViewData["FuselageInventoryId"] = new SelectList(_context.Inventory, "Id", "Name");
+            ViewData["WingsInventoryId"] = new SelectList(_context.Inventory, "Id", "Name");
             return View();
         }
 
@@ -63,7 +77,6 @@ namespace WebApplication1.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,FuselageInventoryId,WingsInventoryId,Wing_Count,EngineInventoryId,Engine_Count,Max_Range,Length,Width,BasePrice,Image_url")] PlaneModels planeModels)
         {
             if (ModelState.IsValid)
@@ -72,9 +85,9 @@ namespace WebApplication1.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EngineInventoryId"] = new SelectList(_context.Inventory, "Id", "Id", planeModels.EngineInventoryId);
-            ViewData["FuselageInventoryId"] = new SelectList(_context.Inventory, "Id", "Id", planeModels.FuselageInventoryId);
-            ViewData["WingsInventoryId"] = new SelectList(_context.Inventory, "Id", "Id", planeModels.WingsInventoryId);
+            ViewData["EngineInventoryId"] = new SelectList(_context.Inventory, "Id", "Name", planeModels.EngineInventoryId);
+            ViewData["FuselageInventoryId"] = new SelectList(_context.Inventory, "Id", "Name", planeModels.FuselageInventoryId);
+            ViewData["WingsInventoryId"] = new SelectList(_context.Inventory, "Id", "Name", planeModels.WingsInventoryId);
             return View(planeModels);
         }
 
@@ -91,9 +104,9 @@ namespace WebApplication1.Controllers
             {
                 return NotFound();
             }
-            ViewData["EngineInventoryId"] = new SelectList(_context.Inventory, "Id", "Id", planeModels.EngineInventoryId);
-            ViewData["FuselageInventoryId"] = new SelectList(_context.Inventory, "Id", "Id", planeModels.FuselageInventoryId);
-            ViewData["WingsInventoryId"] = new SelectList(_context.Inventory, "Id", "Id", planeModels.WingsInventoryId);
+            ViewData["EngineInventoryId"] = new SelectList(_context.Inventory, "Id", "Name", planeModels.EngineInventoryId);
+            ViewData["FuselageInventoryId"] = new SelectList(_context.Inventory, "Id", "Name", planeModels.FuselageInventoryId);
+            ViewData["WingsInventoryId"] = new SelectList(_context.Inventory, "Id", "Name", planeModels.WingsInventoryId);
             return View(planeModels);
         }
 
@@ -101,16 +114,13 @@ namespace WebApplication1.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,FuselageInventoryId,WingsInventoryId,Wing_Count,EngineInventoryId,Engine_Count,Max_Range,Length,Width,BasePrice,Image_url")] PlaneModels planeModels)
+        public async Task<IActionResult> Edit(int id,PlaneModels planeModels)
         {
             if (id != planeModels.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
                 try
                 {
                     _context.Update(planeModels);
@@ -128,10 +138,10 @@ namespace WebApplication1.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["EngineInventoryId"] = new SelectList(_context.Inventory, "Id", "Id", planeModels.EngineInventoryId);
-            ViewData["FuselageInventoryId"] = new SelectList(_context.Inventory, "Id", "Id", planeModels.FuselageInventoryId);
-            ViewData["WingsInventoryId"] = new SelectList(_context.Inventory, "Id", "Id", planeModels.WingsInventoryId);
+            
+            ViewData["EngineInventoryId"] = new SelectList(_context.Inventory, "Id", "Name", planeModels.EngineInventoryId);
+            ViewData["FuselageInventoryId"] = new SelectList(_context.Inventory, "Id", "Name", planeModels.FuselageInventoryId);
+            ViewData["WingsInventoryId"] = new SelectList(_context.Inventory, "Id", "Name", planeModels.WingsInventoryId);
             return View(planeModels);
         }
 
@@ -158,7 +168,6 @@ namespace WebApplication1.Controllers
 
         // POST: Catalog/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.PlaneModels == null)
