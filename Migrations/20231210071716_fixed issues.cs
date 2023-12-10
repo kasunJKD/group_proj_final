@@ -194,7 +194,8 @@ namespace WebApplication1.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CustomizationsId = table.Column<int>(type: "int", nullable: false)
+                    CustomizationsId = table.Column<int>(type: "int", nullable: false),
+                    OrderId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -219,9 +220,9 @@ namespace WebApplication1.Migrations
                     Wing_Count = table.Column<int>(type: "int", nullable: false),
                     EngineInventoryId = table.Column<int>(type: "int", nullable: false),
                     Engine_Count = table.Column<int>(type: "int", nullable: false),
-                    Max_Range = table.Column<double>(type: "float", nullable: false),
-                    Length = table.Column<double>(type: "float", nullable: false),
-                    Width = table.Column<double>(type: "float", nullable: false),
+                    Max_Range = table.Column<double>(type: "float", nullable: true),
+                    Length = table.Column<double>(type: "float", nullable: true),
+                    Width = table.Column<double>(type: "float", nullable: true),
                     BasePrice = table.Column<double>(type: "float", nullable: false),
                     Image_url = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -256,7 +257,6 @@ namespace WebApplication1.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     OrderedModelId = table.Column<int>(type: "int", nullable: false),
-                    CustomOrderId = table.Column<int>(type: "int", nullable: false),
                     Customization_Price = table.Column<double>(type: "float", nullable: false),
                     Total_Price = table.Column<double>(type: "float", nullable: false),
                     CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -270,12 +270,6 @@ namespace WebApplication1.Migrations
                         name: "FK_Order_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Order_Order_Customizations_CustomOrderId",
-                        column: x => x.CustomOrderId,
-                        principalTable: "Order_Customizations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -315,7 +309,8 @@ namespace WebApplication1.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OrderId = table.Column<int>(type: "int", nullable: false),
+                    OrderId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OrderId1 = table.Column<int>(type: "int", nullable: false),
                     Estimated_DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -327,7 +322,7 @@ namespace WebApplication1.Migrations
                     table.PrimaryKey("PK_Shipping", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Shipping_Order_OrderId1",
-                        column: x => x.OrderId,
+                        column: x => x.OrderId1,
                         principalTable: "Order",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -378,11 +373,6 @@ namespace WebApplication1.Migrations
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Order_CustomOrderId",
-                table: "Order",
-                column: "CustomOrderId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Order_OrderedModelId",
                 table: "Order",
                 column: "OrderedModelId");
@@ -415,7 +405,7 @@ namespace WebApplication1.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Shipping_OrderId1",
                 table: "Shipping",
-                column: "OrderId");
+                column: "OrderId1");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -439,10 +429,16 @@ namespace WebApplication1.Migrations
                 name: "Manufacture");
 
             migrationBuilder.DropTable(
+                name: "Order_Customizations");
+
+            migrationBuilder.DropTable(
                 name: "Shipping");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Customizations");
 
             migrationBuilder.DropTable(
                 name: "Order");
@@ -451,13 +447,7 @@ namespace WebApplication1.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Order_Customizations");
-
-            migrationBuilder.DropTable(
                 name: "PlaneModels");
-
-            migrationBuilder.DropTable(
-                name: "Customizations");
 
             migrationBuilder.DropTable(
                 name: "Inventory");

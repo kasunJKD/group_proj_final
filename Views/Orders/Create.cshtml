@@ -13,7 +13,7 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
                 <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
             </div>
@@ -29,13 +29,19 @@
                 <label asp-for="Customization_Price" class="control-label"></label>
                 <input asp-for="Customization_Price" class="form-control" />
                 <span asp-validation-for="Customization_Price" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <label class="control-label">Model Name</label>
+                <input class="form-control" value="@ViewBag.Model_Name" readonly />
+                <span class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Total_Price" class="control-label"></label>
-                <input asp-for="Total_Price" class="form-control" />
+                <input asp-for="Total_Price" class="form-control" value="@ViewBag.BasePrice" readonly />
                 <span asp-validation-for="Total_Price" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            
+           @* <div class="form-group">
                 <label asp-for="CreatedDateTime" class="control-label"></label>
                 <input asp-for="CreatedDateTime" class="form-control" />
                 <span asp-validation-for="CreatedDateTime" class="text-danger"></span>
@@ -44,14 +50,22 @@
                 <label asp-for="UpdatedDateTime" class="control-label"></label>
                 <input asp-for="UpdatedDateTime" class="form-control" />
                 <span asp-validation-for="UpdatedDateTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+            </div>*@
+            @*<div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
                 <select asp-for="Status" class="form-control"></select>
                 <span asp-validation-for="Status" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <img id="imagePreview" src="#" alt="Preview" style="display: none; max-width: 100%; max-height: 200px;" />
+
+                @if (!string.IsNullOrEmpty(ViewBag.Image_url))
+                            {
+                    <img src="data:image/png;base64,@ViewBag.Image_url" alt="Current Image" style="max-width: 100%; max-height: 200px;" />
+                            }
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Start" class="btn btn-primary" />
             </div>
         </form>
     </div>

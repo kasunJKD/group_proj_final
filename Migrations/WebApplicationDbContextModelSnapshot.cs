@@ -319,9 +319,6 @@ namespace WebApplication1.Migrations
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CustomOrderId")
-                        .HasColumnType("int");
-
                     b.Property<double>("Customization_Price")
                         .HasColumnType("float");
 
@@ -343,8 +340,6 @@ namespace WebApplication1.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomOrderId");
-
                     b.HasIndex("OrderedModelId");
 
                     b.HasIndex("UserId");
@@ -361,6 +356,9 @@ namespace WebApplication1.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("CustomizationsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -524,12 +522,6 @@ namespace WebApplication1.Migrations
 
             modelBuilder.Entity("WebApplication1.Models.Order", b =>
                 {
-                    b.HasOne("WebApplication1.Models.Order_Customizations", "CustomOrder")
-                        .WithMany()
-                        .HasForeignKey("CustomOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("WebApplication1.Models.PlaneModels", "OrderedModel")
                         .WithMany()
                         .HasForeignKey("OrderedModelId")
@@ -541,8 +533,6 @@ namespace WebApplication1.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("CustomOrder");
 
                     b.Navigation("OrderedModel");
 

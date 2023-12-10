@@ -99,6 +99,16 @@ namespace WebApplication1.Utilities
                 new PlaneModels { Name = "EIGHT Model", FuselageInventoryId=22, WingsInventoryId=23, EngineInventoryId=24, Wing_Count=2,Engine_Count=6,Max_Range=500, Length=23,Width=23,BasePrice=11235.5, },
             };
 
+            var customizationseed = new Customizations[]
+            {
+                new Customizations {Name = "Customization 1", UnitPrice=24},
+                 new Customizations {Name = "Customization 2", UnitPrice=200.53},
+                  new Customizations {Name = "Customization 3", UnitPrice=300.4},
+                   new Customizations {Name = "Customization 4", UnitPrice=400.4},
+                    new Customizations {Name = "Customization 5", UnitPrice=500.4},
+                     new Customizations {Name = "Customization 6", UnitPrice=200},
+            };
+
             if (!_context.Inventory.Any())
             {
                 _context.Inventory.AddRange(InventorySeed);
@@ -112,7 +122,13 @@ namespace WebApplication1.Utilities
                 _context.SaveChanges();
             }
 
-           
-    }
+            if (!_context.Customizations.Any())
+            {
+                _context.Customizations.AddRange(customizationseed);
+                _context.SaveChanges();
+            }
+
+
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -22,7 +23,7 @@ namespace WebApplication1.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var webApplicationDbContext = _context.Order.Include(o => o.CustomOrder).Include(o => o.OrderedModel).Include(o => o.User);
+            var webApplicationDbContext = _context.Order.Include(o => o.OrderedModel).Include(o => o.User);
             return View(await webApplicationDbContext.ToListAsync());
         }
 
@@ -35,7 +36,6 @@ namespace WebApplication1.Controllers
             }
 
             var order = await _context.Order
-                .Include(o => o.CustomOrder)
                 .Include(o => o.OrderedModel)
                 .Include(o => o.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -48,11 +48,18 @@ namespace WebApplication1.Controllers
         }
 
         // GET: Orders/Create
-        public IActionResult Create()
+        public IActionResult Create(int? id)
         {
-            ViewData["CustomOrderId"] = new SelectList(_context.Order_Customizations, "Id", "Id");
-            ViewData["OrderedModelId"] = new SelectList(_context.PlaneModels, "Id", "Id");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+            if (id == null || _context.PlaneModels == null)
+            {
+                return NotFound();
+            }
+
+            var planeModels = _context.PlaneModels.FindAsync(id);
+            ViewBag.BasePrice = planeModels.Result.BasePrice;
+            ViewBag.Image_url = planeModels.Result.Image_url;
+            ViewBag.Model_Name = planeModels.Result.Name;
+            ViewBag.Model_Id = id;
             return View();
         }
 
@@ -61,18 +68,21 @@ namespace WebApplication1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserId,OrderedModelId,CustomOrderId,Customization_Price,Total_Price,CreatedDateTime,UpdatedDateTime,Status")] Order order)
+        public async Task<IActionResult> Create([Bind("Id,UserId,OrderedModelId,CustomOrderId,Customization_Price,Total_Price,CreatedDateTime,UpdatedDateTime,Status")] Order order, int id)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(order);
+                var planeModels = _context.PlaneModels.FindAsync(id);
+
+                Order order2 = new Order();
+                order2.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                order2.OrderedModelId = order.OrderedModelId;
+                order2.CreatedDateTime= DateTime.Now;
+                order2.UpdatedDateTime= DateTime.Now;
+                order2.Status = StatusData.Pending;
+                order2.OrderedModelId = id;
+                order2.Total_Price = planeModels.Result.BasePrice;
+                _context.Add(order2);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["CustomOrderId"] = new SelectList(_context.Order_Customizations, "Id", "Id", order.CustomOrderId);
-            ViewData["OrderedModelId"] = new SelectList(_context.PlaneModels, "Id", "Id", order.OrderedModelId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", order.UserId);
-            return View(order);
         }
 
         // GET: Orders/Edit/5
@@ -88,7 +98,6 @@ namespace WebApplication1.Controllers
             {
                 return NotFound();
             }
-            ViewData["CustomOrderId"] = new SelectList(_context.Order_Customizations, "Id", "Id", order.CustomOrderId);
             ViewData["OrderedModelId"] = new SelectList(_context.PlaneModels, "Id", "Id", order.OrderedModelId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", order.UserId);
             return View(order);
@@ -126,7 +135,6 @@ namespace WebApplication1.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomOrderId"] = new SelectList(_context.Order_Customizations, "Id", "Id", order.CustomOrderId);
             ViewData["OrderedModelId"] = new SelectList(_context.PlaneModels, "Id", "Id", order.OrderedModelId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", order.UserId);
             return View(order);
@@ -141,7 +149,6 @@ namespace WebApplication1.Controllers
             }
 
             var order = await _context.Order
-                .Include(o => o.CustomOrder)
                 .Include(o => o.OrderedModel)
                 .Include(o => o.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
