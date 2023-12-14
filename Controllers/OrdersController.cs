@@ -82,7 +82,11 @@ namespace WebApplication1.Controllers
                 order2.Total_Price = planeModels.Result.BasePrice;
                 _context.Add(order2);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                // Get the generated OrderId after saving
+                int orderId = order2.Id;
+
+                return RedirectToAction("Create", "Order_Customizations", new { orderId });
         }
 
         // GET: Orders/Edit/5

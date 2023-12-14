@@ -1,0 +1,118 @@
+﻿@model WebApplication1.Models.Order_Customizations
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>Order Customizations</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form id="createForm" asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <select id="customizationSelect" asp-for="CustomizationsId" class="form-control">
+                    @foreach (var item2 in ViewBag.CustomizationsId)
+                    {
+                        <option value="@item2.Id" data-unit-price="@item2.UnitPrice">@item2.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="button" id="addRowBtn" class="btn btn-success">Add to Table</button>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Order" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<table id="dataTable" class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Customizations)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customizations.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customizations.UnitPrice)
+            </th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var tableBody = $('#dataTable tbody');
+        var addRowBtn = $('#addRowBtn');
+
+        addRowBtn.click(function () {
+            var selectedCustomization = $('#customizationSelect');
+            var customizationId = selectedCustomization.val();
+            var customizationText = selectedCustomization.find('option:selected').text();
+            var unitPrice = selectedCustomization.find('option:selected').data('unit-price');
+
+            console.log(selectedCustomization.find('option:selected'));
+
+            var newRow = '<tr>' +
+                '<td>' + customizationId + '</td>' +
+                '<td>' + customizationText + '</td>' +
+                '<td>' + unitPrice + '</td>' +
+                '</tr>';
+
+            tableBody.append(newRow);
+        });
+
+        // Additional code for submitting the form and handling the server-side logic
+        $('#createForm').submit(function (event) {
+            var rows = tableBody.find('tr');
+
+            var data = [];
+
+            // Iterate through each row in the table and collect data
+            rows.each(function () {
+                var row = $(this);
+                var cells = row.find('td');
+
+                // Assuming the order is: CustomizationId, OrderId
+                var customizationId = cells.eq(0).text();
+                var orderId = cells.eq(1).text();
+
+                data.push({
+                    CustomizationId: customizationId,
+                    OrderId: orderId
+                    // Add other properties as needed
+                });
+            });
+
+            // Perform AJAX request to submit all rows
+            $.ajax({
+                type: 'POST',
+                url: '/Order_CustomizationsController/Create', // Update with your actual controller and action
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function (response) {
+                    // Handle success response (if needed)
+                    console.log('All rows submitted successfully');
+                    console.log(response);
+                },
+                error: function (error) {
+                    // Handle error (if needed)
+                    console.error('Error submitting all rows');
+                    console.error(error);
+                }
+            });
+        });
+    });
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
