@@ -83,11 +83,13 @@
 
                 // Assuming the order is: CustomizationId, OrderId
                 var customizationId = cells.eq(0).text();
-                var orderId = cells.eq(1).text();
+                var customizationText = cells.eq(1).text();
+                var unitPrice = cells.eq(2).text();
 
                 data.push({
-                    CustomizationId: customizationId,
-                    OrderId: orderId
+                    Id: customizationId,
+                    Name: customizationText,
+                    UnitPrice: unitPrice
                     // Add other properties as needed
                 });
             });
@@ -95,7 +97,7 @@
             // Perform AJAX request to submit all rows
             $.ajax({
                 type: 'POST',
-                url: '/Order_CustomizationsController/Create', // Update with your actual controller and action
+                url: '/Order_Customizations/Create', // Update with your actual controller and action
                 contentType: 'application/json',
                 data: JSON.stringify(data),
                 success: function (response) {
