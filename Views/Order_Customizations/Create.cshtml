@@ -73,6 +73,7 @@
 
         // Additional code for submitting the form and handling the server-side logic
         $('#createForm').submit(function (event) {
+                event.preventDefault();
             var rows = tableBody.find('tr');
 
             var data = [];
@@ -109,17 +110,26 @@
                 type: 'POST',
                 url: '/Order_Customizations/CreateInsertValues',
                 contentType: 'application/json',
-                dataType: "JSON",
+                dataType: "json",
                 data: JSON.stringify(data),
                 success: function (r) {
-                    //alert(r.message);
-                   window.location.href = "/Catalog/index";
+                   //alert(r.message);
+                  // debugger;
+                  // window.location.href = "/Catalog/index";
+                   if (r.success) {
+                        console.log('AJAX success:', r.message);
+                        window.location.href = "/Catalog/index";
+                        // Handle success, e.g., display a success message to the user
+                    } else {
+                        console.error('AJAX error:', r.message);
+                        // Handle error, e.g., display an error message to the user
+                    }
                 },
                 error: function (xhr, textStatus, error) {
                     // Handle error (if needed)
                     console.error('Error submitting all rows');
                     console.error(xhr.status + ' ' + xhr.statusText + ': ' + error);
-                    window.location.href = "/Catalog/index";
+                    //window.location.href = "/Catalog/index";
                 }
             });
 

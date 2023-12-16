@@ -118,7 +118,7 @@ namespace WebApplication1.Controllers
                 //return RedirectToAction("Index", "Catalog");
 
                 //return new JsonResult(Ok());
-                return Json(new { success = true, message = $"Error:", Status = "success" });
+                return Json(new { success = true, message = "Order submitted successfully.", Status = "success" });
 
             }
             catch (Exception ex)
