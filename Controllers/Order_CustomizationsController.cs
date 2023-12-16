@@ -60,18 +60,73 @@ namespace WebApplication1.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public IActionResult Create([FromBody] List<Customizations>rows, int orderId)
+        public JsonResult CreateInsertValues([FromBody] List<Customizations_Input> rows, int orderId)
         {
-            /* if (ModelState.IsValid)
-             {
-                 _context.Add(order_Customizations);
-                 await _context.SaveChangesAsync();
-                 return RedirectToAction(nameof(Index));
-             }
-             ViewData["CustomizationsId"] = new SelectList(_context.Customizations, "Id", "Id", order_Customizations.CustomizationsId);
-             return View(order_Customizations);*/
 
-            return Json(new { success = true, message = "Rows submitted successfully" });
+            try
+            {
+                double totalUnitPrice = 0;
+                int orderIDD = 0;
+
+                foreach (var row in rows)
+                {
+                    orderIDD = row.OrderId;
+                    var order_Customizations = new Order_Customizations
+                    {
+                        CustomizationsId = row.Id,
+                        OrderId = row.OrderId,
+                    };
+
+                    // Add the instance to the context
+                    _context.Order_Customizations.Add(order_Customizations);
+
+                    // Accumulate the total unit price
+                    totalUnitPrice += row.UnitPrice;
+                }
+
+                // Update the order table with the total unit price
+                var order = _context.Order.FirstOrDefault(o => o.Id == orderIDD);
+                double orderTableTotal = order.Total_Price;
+
+                if (order != null)
+                {
+                    order.Customization_Price = totalUnitPrice;
+                    order.Total_Price = orderTableTotal + totalUnitPrice;
+                    order.Status = StatusData.Done;
+                    _context.SaveChanges();                    
+                }
+
+                if (orderIDD != 0) { 
+
+                    var manufacture = new Manufacture
+                    {
+                        OrderId = orderIDD,
+                        UpdatedDateTime = DateTime.Now,
+                        CreatedDateTime = DateTime.Now,
+                        Status = StatusData.InProgress
+                    };
+
+                    _context.Manufacture.Add(manufacture);
+
+                    _context.SaveChanges();
+
+                }
+
+                TempData["SuccessMessage"] = "Order submitted successfully.";
+
+                // return Json(Url.Action("Index", "Catalog"));
+                //return RedirectToAction("Index", "Catalog");
+
+                //return new JsonResult(Ok());
+                return Json(new { success = true, message = $"Error:", Status = "success" });
+
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions (log, return an error message, etc.)
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
+
         }
 
         // GET: Order_Customizations/Edit/5

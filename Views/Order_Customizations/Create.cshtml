@@ -9,8 +9,9 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form id="createForm" asp-action="Create">
+        <form id="createForm" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" id="orderId" name="orderId" value="@ViewData["OrderId"]" />
             <div class="form-group">
                 <select id="customizationSelect" asp-for="CustomizationsId" class="form-control">
                     @foreach (var item2 in ViewBag.CustomizationsId)
@@ -46,7 +47,7 @@
     <tbody></tbody>
 </table>
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+@section Scripts {
 
 <script>
     $(document).ready(function () {
@@ -94,27 +95,47 @@
                 });
             });
 
+            // Get orderId from the query string
+            var urlParams = new URLSearchParams(window.location.search);
+            var orderId = urlParams.get('orderId');
+
+            // Include orderId in the data
+            data.forEach(function (item) {
+                item.OrderId = orderId;
+            });
+
             // Perform AJAX request to submit all rows
             $.ajax({
                 type: 'POST',
-                url: '/Order_Customizations/Create', // Update with your actual controller and action
+                url: '/Order_Customizations/CreateInsertValues',
                 contentType: 'application/json',
+                dataType: "JSON",
                 data: JSON.stringify(data),
-                success: function (response) {
-                    // Handle success response (if needed)
-                    console.log('All rows submitted successfully');
-                    console.log(response);
+                success: function (r) {
+                    //alert(r.message);
+                   window.location.href = "/Catalog/index";
                 },
-                error: function (error) {
+                error: function (xhr, textStatus, error) {
                     // Handle error (if needed)
                     console.error('Error submitting all rows');
-                    console.error(error);
+                    console.error(xhr.status + ' ' + xhr.statusText + ': ' + error);
+                    window.location.href = "/Catalog/index";
                 }
             });
+
+           // $.ajax({
+           //     type: 'POST',
+           //     url: '/Order_Customizations/CreateInsertValues',
+           //     contentType: 'application/json',
+           //     dataType: "JSON",
+           //     data: JSON.stringify(data),
+           // }).done(function (response) {
+           //     window.location.href = "/Catalog/index";
+           // });
         });
     });
 </script>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
 }
