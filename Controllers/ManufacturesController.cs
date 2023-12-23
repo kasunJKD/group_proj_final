@@ -93,12 +93,15 @@ namespace WebApplication1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,OrderId,DeliveryDateTime,CreatedDateTime,UpdatedDateTime,Status")] Manufacture manufacture)
         {
-            var existingManufacture = await _context.Manufacture.FindAsync(id);
+            var existingManufacture = await _context.Manufacture
+            .Include(m => m.Order)           // Include the Order navigation property
+                .ThenInclude(o => o.User)    // Include the User navigation property within the Order
+            .FirstOrDefaultAsync(m => m.Id == id);
 
             if (existingManufacture == null)
-            {
-                return NotFound();
-            }
+                    {
+                        return NotFound();
+                    }
 
             try
             {
@@ -117,7 +120,7 @@ namespace WebApplication1.Controllers
                     {
                         OrderId = manufacture.OrderId,
                         Estimated_DateTime = DateTime.Now.AddDays(5),
-                        Address = "Colombo",
+                        Address = existingManufacture.Order.User.Address,
                         UpdatedDateTime = DateTime.Now,
                         CreatedDateTime = DateTime.Now,
                         Status = StatusData.InProgress
