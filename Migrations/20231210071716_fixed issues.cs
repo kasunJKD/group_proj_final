@@ -309,8 +309,7 @@ namespace WebApplication1.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OrderId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OrderId1 = table.Column<int>(type: "int", nullable: false),
+                    OrderId = table.Column<int>(type: "int", nullable: false),
                     Estimated_DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -322,7 +321,7 @@ namespace WebApplication1.Migrations
                     table.PrimaryKey("PK_Shipping", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Shipping_Order_OrderId1",
-                        column: x => x.OrderId1,
+                        column: x => x.OrderId,
                         principalTable: "Order",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -405,7 +404,7 @@ namespace WebApplication1.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Shipping_OrderId1",
                 table: "Shipping",
-                column: "OrderId1");
+                column: "OrderId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
