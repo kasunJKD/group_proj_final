@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewData["Title"] = "GeneratePDF";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>GeneratePDF</h1>
+<form method="post" asp-action="GeneratePDF">
+    <div class="container" style="margin-top:10rem">
+        <table class="table" id="tblPlayer">
+            <thead>
+                <tr>
+                    
+                    <th scope="col">Id</th>
+                    <th scope="col">OrderedModel</th>
+                    <th scope="col">CreatedDateTime</th>
+                    <th scope="col">Total_Price</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.User.Id</td>
+                        <td>@item.OrderedModel.Id</td>
+                        <td>@item.Customization_Price</td>
+                        <td>@item.Total_Price</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <button id="btnPrint" type="submit" class="btn btn-primary">Submit</button>
+</form>
+
