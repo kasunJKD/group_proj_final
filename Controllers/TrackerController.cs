@@ -18,7 +18,7 @@ namespace WebApplication1.Controllers
         {
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var trackerViewModels = await _context.Order
+            var trackerViewModels = await _context.Order.Include(m => m.OrderedModel)
                 .Where(o => o.UserId == userId)
                 .Select(order => new Tracker
                 {
