@@ -38,6 +38,7 @@ namespace WebApplication1.Utilities
                 {
                     Email = "Admin@gmail.com",
                     UserName = "Admin@gmail.com",
+                    Address = "AeroSoftHQ",
                     FirstName = "System",
                     LastName = "Admin",
                 }, "Mate1234!").GetAwaiter().GetResult();
