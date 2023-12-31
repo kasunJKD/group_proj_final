@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
 using WebApplication1.Models;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
@@ -62,11 +65,130 @@ namespace WebApplication1.Controllers
             ViewBag.Model_Id = id;
             return View();
         }
+        public IActionResult GeneratePDF()
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                Document document = new Document(PageSize.A4, 25, 25, 30, 30);
+                PdfWriter writer = PdfWriter.GetInstance(document, ms);
+                document.Open();
 
-        // POST: Orders/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+                PdfPTable table = new PdfPTable(6);
+
+                PdfPCell cell1 = new PdfPCell(new Phrase("Id"));
+                PdfPCell cell2 = new PdfPCell(new Phrase("UserId"));
+                PdfPCell cell3 = new PdfPCell(new Phrase("OrderedModel"));
+                PdfPCell cell4 = new PdfPCell(new Phrase("Customization_Price"));
+                PdfPCell cell5 = new PdfPCell(new Phrase("Total_Price"));
+                PdfPCell cell6 = new PdfPCell(new Phrase("CreatedDateTime"));
+                
+                table.AddCell(cell1);
+                table.AddCell(cell2);
+                table.AddCell(cell3);
+                table.AddCell(cell4);
+                table.AddCell(cell5);
+                table.AddCell(cell6);
+
+                //var bids = _bidInterface.GetAllBidsList().ToList();
+                //var totalBoughtPlayersPrice = 0;
+                var orders = _context.Order.ToList(); // Make sure you adjust this line to match how you retrieve orders
+
+                foreach (var item in orders)
+                {
+                    PdfPCell cell = new PdfPCell(new Phrase(item.Id.ToString()));
+                   PdfPCell celll2 = new PdfPCell(new Phrase(item.UserId.ToString()));
+                    PdfPCell celll3 = new PdfPCell(new Phrase(item.OrderedModelId.ToString()));
+                    PdfPCell celll4 = new PdfPCell(new Phrase(item.Customization_Price.ToString()));
+                    PdfPCell celll5 = new PdfPCell(new Phrase(item.Total_Price.ToString()));
+                    PdfPCell celll6 = new PdfPCell(new Phrase(item.CreatedDateTime.ToString()));
+                   
+
+                    table.AddCell(cell);
+                   table.AddCell(celll2);
+                    table.AddCell(celll3);
+                    table.AddCell(celll4);
+                    table.AddCell(celll5);
+                    table.AddCell(celll6);
+                }
+
+
+
+
+
+
+                document.Add(table);
+                document.Close();
+                writer.Close();
+
+                var constant = ms.ToArray();
+                return File(constant, "application/vnd", "SellsData.pdf");
+
+            }
+        }
+
         [HttpPost]
+        public IActionResult GeneratePDFPlayer()
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                Document document = new Document(PageSize.A4, 25, 25, 30, 30);
+                PdfWriter writer = PdfWriter.GetInstance(document, ms);
+                document.Open();
+
+                PdfPTable table = new PdfPTable(6);
+
+
+                PdfPCell cell1 = new PdfPCell(new Phrase("UserId"));
+                PdfPCell cell2 = new PdfPCell(new Phrase("OrderedModel"));
+                PdfPCell cell3 = new PdfPCell(new Phrase("Customization_Price"));
+                PdfPCell cell4 = new PdfPCell(new Phrase("Total_Price"));
+                PdfPCell cell5 = new PdfPCell(new Phrase("CreatedDateTime"));
+                PdfPCell cell6 = new PdfPCell(new Phrase("Status"));
+                table.AddCell(cell1);
+                table.AddCell(cell2);
+                table.AddCell(cell3);
+                table.AddCell(cell4);
+                table.AddCell(cell5);
+                table.AddCell(cell6);
+
+                var orders = _context.Order.ToList(); // Make sure you adjust this line to match how you retrieve orders
+
+
+
+                foreach (var item in orders)
+                {
+                    PdfPCell cell = new PdfPCell(new Phrase(item.Id.ToString()));
+                    PdfPCell celll2 = new PdfPCell(new Phrase(item.OrderedModel.ToString()));
+                    PdfPCell celll3 = new PdfPCell(new Phrase(item.Customization_Price.ToString()));
+                    PdfPCell celll4 = new PdfPCell(new Phrase(item.Total_Price.ToString()));
+                    PdfPCell celll5 = new PdfPCell(new Phrase(item.CreatedDateTime.ToString()));
+                    PdfPCell celll6 = new PdfPCell(new Phrase(item.Status.ToString()));
+
+                    table.AddCell(cell);
+                    table.AddCell(celll2);
+                    table.AddCell(celll3);
+                    table.AddCell(celll4);
+                    table.AddCell(celll5);
+                    table.AddCell(celll6);
+                }
+
+
+                document.Add(table);
+                document.Close();
+                writer.Close();
+
+                var constant = ms.ToArray();
+                return File(constant, "application/vnd", "players.pdf");
+
+            }
+        }
+
+    
+
+    // POST: Orders/Create
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,UserId,OrderedModelId,CustomOrderId,Customization_Price,Total_Price,CreatedDateTime,UpdatedDateTime,Status")] Order order, int id)
         {
@@ -188,4 +310,5 @@ namespace WebApplication1.Controllers
           return (_context.Order?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
+    
 }
