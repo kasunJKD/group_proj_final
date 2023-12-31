@@ -79,16 +79,19 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([Bind("Id,Name,FuselageInventoryId,WingsInventoryId,Wing_Count,EngineInventoryId,Engine_Count,Max_Range,Length,Width,BasePrice,Image_url")] PlaneModels planeModels)
         {
-            if (ModelState.IsValid)
+            try
             {
                 _context.Add(planeModels);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EngineInventoryId"] = new SelectList(_context.Inventory, "Id", "Name", planeModels.EngineInventoryId);
-            ViewData["FuselageInventoryId"] = new SelectList(_context.Inventory, "Id", "Name", planeModels.FuselageInventoryId);
-            ViewData["WingsInventoryId"] = new SelectList(_context.Inventory, "Id", "Name", planeModels.WingsInventoryId);
-            return View(planeModels);
+            catch
+            {
+                ViewData["EngineInventoryId"] = new SelectList(_context.Inventory, "Id", "Name", planeModels.EngineInventoryId);
+                ViewData["FuselageInventoryId"] = new SelectList(_context.Inventory, "Id", "Name", planeModels.FuselageInventoryId);
+                ViewData["WingsInventoryId"] = new SelectList(_context.Inventory, "Id", "Name", planeModels.WingsInventoryId);
+                return View(planeModels);
+            }
         }
 
         // GET: Catalog/Edit/5

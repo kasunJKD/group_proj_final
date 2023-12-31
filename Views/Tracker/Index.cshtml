@@ -11,8 +11,8 @@
     <table class="table">
         <thead>
             <tr>
-                <th>User ID</th>
                 <th>Order ID</th>
+                <th>Model Name</th>
                 <th>Manufacture Status</th>
                 <th>Shipping Status</th>
             </tr>
@@ -21,8 +21,8 @@
             @foreach (var trackerViewModel in Model)
             {
                 <tr>
-                    <td>@trackerViewModel.userId</td>
                     <td>@trackerViewModel.order.Id</td>
+                    <td>@trackerViewModel.order.OrderedModel.Name</td>
                     <td>
                         @if (trackerViewModel.manufacture != null)
                         {
