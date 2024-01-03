@@ -4,11 +4,17 @@ namespace WebApplication1.Models
 {
     public class Inventory
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public int AvailableCount { get; set; } = 0;
-        public double Price_Per_Unit { get; set; }
-        public DateTime CreatedDateTime { get; set; }
-        public DateTime UpdatedDateTime { get; set;}
+         [DisplayName("ID")]
+         public int Id { get; set; }
+         [DisplayName("PRODUCT NAME")]
+         public string Name { get; set; }
+         [DisplayName("AVAILABLE QUANTITY")]
+         public int AvailableCount { get; set; } = 0;
+         [DisplayName("PRICE PER UNIT")]
+         public double Price_Per_Unit { get; set; }
+         [DisplayName("CREATED TIME")]
+         public DateTime CreatedDateTime { get; set; }
+         [DisplayName("UPDATED TIME")]
+         public DateTime UpdatedDateTime { get; set;}
     }
 }
