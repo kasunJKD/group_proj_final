@@ -1,0 +1,42 @@
+﻿@model WebApplication1.Models.Inventory
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>Inventory</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AvailableCount" class="control-label"></label>
+                <input asp-for="AvailableCount" class="form-control" />
+                <span asp-validation-for="AvailableCount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price_Per_Unit" class="control-label"></label>
+                <input asp-for="Price_Per_Unit" class="form-control" />
+                <span asp-validation-for="Price_Per_Unit" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
