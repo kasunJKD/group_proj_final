@@ -241,26 +241,38 @@ namespace WebApplication1.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
+                // Load the existing order from the database
+                var existingOrder = await _context.Order.FindAsync(id);
+
+                if (existingOrder == null)
                 {
-                    _context.Update(order);
-                    await _context.SaveChangesAsync();
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OrderExists(order.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+
+                // Update only the UpdatedDateTime field
+                existingOrder.UpdatedDateTime = DateTime.Now;
+                existingOrder.Status = order.Status;
+                // Mark the entity as modified
+                _context.Entry(existingOrder).State = EntityState.Modified;
+
+                // Save changes
+                await _context.SaveChangesAsync();
             }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!OrderExists(order.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
+            
             ViewData["OrderedModelId"] = new SelectList(_context.PlaneModels, "Id", "Id", order.OrderedModelId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", order.UserId);
             return View(order);
