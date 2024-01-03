@@ -71,9 +71,7 @@
 }
     </tbody>
 </table>
-<form asp-controller="orders" asp-action="Index" method="post">
-<button id="btnPrint" type="submit" class="btn btn-primary">Submit</button>
-</form>
+
 <script>
     document.getElementById("btnPrint").addEventListener("click", function () {
         window.location.href = '@Url.Action("GeneratePDF", "orders")';
