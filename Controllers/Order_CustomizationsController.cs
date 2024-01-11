@@ -60,32 +60,34 @@ namespace WebApplication1.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public JsonResult CreateInsertValues([FromBody] List<Customizations_Input> rows, int orderId)
+        public JsonResult CreateInsertValues([FromBody] Customizations_Input_Extended val, int orderId)
         {
 
             try
             {
                 double totalUnitPrice = 0;
-                int orderIDD = 0;
 
-                foreach (var row in rows)
+                if (val.Data.Count > 0)
                 {
-                    orderIDD = row.OrderId;
-                    var order_Customizations = new Order_Customizations
+                    foreach (var row in val.Data)
                     {
-                        CustomizationsId = row.Id,
-                        OrderId = row.OrderId,
-                    };
+                        var order_Customizations = new Order_Customizations
+                        {
+                            CustomizationsId = row.Id,
+                            OrderId = row.OrderId,
+                        };
 
-                    // Add the instance to the context
-                    _context.Order_Customizations.Add(order_Customizations);
+                        // Add the instance to the context
+                        _context.Order_Customizations.Add(order_Customizations);
 
-                    // Accumulate the total unit price
-                    totalUnitPrice += row.UnitPrice;
+                        // Accumulate the total unit price
+                        totalUnitPrice += row.UnitPrice;
+                    }
                 }
+                 
 
                 // Update the order table with the total unit price
-                var order = _context.Order.FirstOrDefault(o => o.Id == orderIDD);
+                var order = _context.Order.FirstOrDefault(o => o.Id == val.OrderId);
                 double orderTableTotal = order.Total_Price;
 
                 if (order != null)
@@ -96,11 +98,11 @@ namespace WebApplication1.Controllers
                     _context.SaveChanges();                    
                 }
 
-                if (orderIDD != 0) { 
+                if (val.OrderId != 0) { 
 
                     var manufacture = new Manufacture
                     {
-                        OrderId = orderIDD,
+                        OrderId = val.OrderId,
                         UpdatedDateTime = DateTime.Now,
                         CreatedDateTime = DateTime.Now,
                         Status = StatusData.InProgress
@@ -223,6 +225,43 @@ namespace WebApplication1.Controllers
         private bool Order_CustomizationsExists(int id)
         {
           return (_context.Order_Customizations?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        [HttpPost]
+        public JsonResult BackButton([FromBody] Customizations_Input_Extended val, int orderId)
+        {
+
+            try
+            {
+                // Assuming that val.OrderId is not null
+                int orderIdToDelete = val.OrderId;
+
+                var orderToDelete = _context.Order.FirstOrDefault(o => o.Id == orderIdToDelete);
+
+                if (orderToDelete != null)
+                {
+                    // Remove the order from the context and mark it for deletion
+                    _context.Order.Remove(orderToDelete);
+
+                    // Save changes to persist the deletion
+                    _context.SaveChanges();
+                }
+
+                TempData["SuccessMessage"] = "Ordering process reverted.";
+
+                // return Json(Url.Action("Index", "Catalog"));
+                //return RedirectToAction("Index", "Catalog");
+
+                //return new JsonResult(Ok());
+                return Json(new { success = true, message = "Ordering process reverted successfully.", Status = "success" });
+
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions (log, return an error message, etc.)
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
+
         }
     }
 }

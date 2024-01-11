@@ -16,37 +16,42 @@
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
+                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId" disabled></select>
                 <span asp-validation-for="UserId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="OrderedModelId" class="control-label"></label>
-                <select asp-for="OrderedModelId" class="form-control" asp-items="ViewBag.OrderedModelId"></select>
+                <select asp-for="OrderedModelId" class="form-control" asp-items="ViewBag.OrderedModelId" disabled></select>
                 <span asp-validation-for="OrderedModelId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Customization_Price" class="control-label"></label>
-                <input asp-for="Customization_Price" class="form-control" />
+                <input asp-for="Customization_Price" class="form-control" disabled />
                 <span asp-validation-for="Customization_Price" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Total_Price" class="control-label"></label>
-                <input asp-for="Total_Price" class="form-control" />
+                <input asp-for="Total_Price" class="form-control" disabled />
                 <span asp-validation-for="Total_Price" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CreatedDateTime" class="control-label"></label>
-                <input asp-for="CreatedDateTime" class="form-control" />
+                <input asp-for="CreatedDateTime" class="form-control" disabled />
                 <span asp-validation-for="CreatedDateTime" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="UpdatedDateTime" class="control-label"></label>
-                <input asp-for="UpdatedDateTime" class="form-control" />
+                <input asp-for="UpdatedDateTime" class="form-control" disabled />
                 <span asp-validation-for="UpdatedDateTime" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control"></select>
+                <select asp-for="Status" class="form-control">
+                    @foreach (var value in Enum.GetValues(typeof(StatusData)))
+                    {
+                        <option value="@value">@value</option>
+                    }
+                </select>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">

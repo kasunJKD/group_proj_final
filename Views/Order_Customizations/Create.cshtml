@@ -12,7 +12,7 @@
         <form id="createForm" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" id="orderId" name="orderId" value="@ViewData["OrderId"]" />
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 20px;">
                 <select id="customizationSelect" asp-for="CustomizationsId" class="form-control">
                     @foreach (var item2 in ViewBag.CustomizationsId)
                     {
@@ -20,11 +20,14 @@
                     }
                 </select>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 20px;">
                 <button type="button" id="addRowBtn" class="btn btn-success">Add to Table</button>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 20px;">
                 <input type="submit" value="Order" class="btn btn-primary" />
+            </div>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <button type="button" id="backBtn" class="btn btn-warning">Back</button>
             </div>
         </form>
     </div>
@@ -53,6 +56,7 @@
     $(document).ready(function () {
         var tableBody = $('#dataTable tbody');
         var addRowBtn = $('#addRowBtn');
+        var backBtn = $('#backBtn');
 
         addRowBtn.click(function () {
             var selectedCustomization = $('#customizationSelect');
@@ -70,6 +74,39 @@
 
             tableBody.append(newRow);
         });
+
+            backBtn.click(function () {
+                // Get orderId from the query string
+                var urlParams = new URLSearchParams(window.location.search);
+                var orderId = urlParams.get('orderId');
+
+                var payload = {
+                    orderId: orderId
+                };
+
+                // Perform AJAX request to update the rows without orderId
+                $.ajax({
+                    type: 'POST',
+                    url: '/Order_Customizations/BackButton',
+                    contentType: 'application/json',
+                    dataType: "json",
+                    data: JSON.stringify(payload),
+                    success: function (r) {
+                        if (r.success) {
+                            console.log('Back button clicked. AJAX success:', r.message);
+                            window.location.href = "/Catalog/index";
+                        } else {
+                            console.error('Back button clicked. AJAX error:', r.message);
+                            // Handle error, e.g., display an error message to the user
+                        }
+                    },
+                    error: function (xhr, textStatus, error) {
+                        console.error('Error updating rows without orderId');
+                        console.error(xhr.status + ' ' + xhr.statusText + ': ' + error);
+                    }
+                });
+            });
+
 
         // Additional code for submitting the form and handling the server-side logic
         $('#createForm').submit(function (event) {
@@ -105,13 +142,18 @@
                 item.OrderId = orderId;
             });
 
+            var payload = {
+                data: data,
+                orderId: orderId
+            };
+
             // Perform AJAX request to submit all rows
             $.ajax({
                 type: 'POST',
                 url: '/Order_Customizations/CreateInsertValues',
                 contentType: 'application/json',
                 dataType: "json",
-                data: JSON.stringify(data),
+                data: JSON.stringify(payload),
                 success: function (r) {
                    //alert(r.message);
                   // debugger;

@@ -14,4 +14,10 @@
         public double UnitPrice { get; set; }
         public int OrderId { get; set; }
     }
+
+    public class Customizations_Input_Extended
+    {
+        public List<Customizations_Input> Data { get; set; }
+        public int OrderId { get; set; }
+    }
 }

@@ -67,9 +67,18 @@ namespace WebApplication1.Controllers
         // GET: Catalog/Create
         public IActionResult Create()
         {
-            ViewData["EngineInventoryId"] = new SelectList(_context.Inventory, "Id", "Name");
-            ViewData["FuselageInventoryId"] = new SelectList(_context.Inventory, "Id", "Name");
-            ViewData["WingsInventoryId"] = new SelectList(_context.Inventory, "Id", "Name");
+            var filteredInventory = _context.Inventory
+                .Where(item => item.Name.Contains("Engine"))
+                .ToList();
+            var filteredFuselage = _context.Inventory
+               .Where(item => item.Name.Contains("Fuselage"))
+               .ToList();
+            var filteredWings = _context.Inventory
+               .Where(item => item.Name.Contains("Wings"))
+               .ToList();
+            ViewData["EngineInventoryId"] = new SelectList(filteredInventory, "Id", "Name");
+            ViewData["FuselageInventoryId"] = new SelectList(filteredFuselage, "Id", "Name");
+            ViewData["WingsInventoryId"] = new SelectList(filteredWings, "Id", "Name");
             return View();
         }
 
