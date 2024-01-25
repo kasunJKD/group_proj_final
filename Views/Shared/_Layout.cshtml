@@ -8,49 +8,126 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Air Pro</title>
 
-    <title>@ViewData["Title"] - AeroSoft</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/bootswatch.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebApplication1.styles.css" asp-append-version="true" />
-</head>
-<body>
 
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+
+        @* <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"] - coursework1</title>
+        <link rel="stylesheet" href="~/css/Bootswatch.css"/>
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/coursework1.styles.css" asp-append-version="true" />*@
+        <title>Tour & Travels </title>
+        <!-- Meta-Tags -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="keywords" content="Incorporated a Responsive Web Template, Bootstrap Web Templates, Flat Web Templates, Android Compatible Web Template, Smartphone Compatible Web Template, Free Webdesigns for Nokia, Samsung, LG, Sony Ericsson, Motorola Web Design">
+        <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+        <!-- //Meta-Tags -->
+        <!-- Custom-Stylesheet-Links -->
+        <!-- Bootstrap-CSS -->
+        <link rel="stylesheet" href="~/css/bootstrap.min.css" type="text/css" media="all">
+        <!-- Index-Page-CSS -->
+        <link rel="stylesheet" href="~/css/style.css" type="text/css" media="all">
+        <!-- PopUp-Box-CSS -->
+        <link rel="stylesheet" href="~/css/chocolat.css" type="text/css" media="all">
+        <!-- //Custom-Stylesheet-Links
+        <!-- Fonts -->
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700" type="text/css" media="all">
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700" type="text/css" media="all">
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,100,300,500,700,900" type="text/css" media="all">
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Raleway:400,500,600,700,800" type="text/css" media="all">
+        <!-- //Fonts -->
+    </head>
+
+
+
+<body>
+  @*  <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarColor01">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                            Home
+                            <span class="visually-hidden">(current)</span>
+                        </a>
+                    </li>
+                    
+                   
+                </ul>
+                <form class="d-flex">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                    <partial name="_LoginPartial" />
+                    </a>
+                </form>
+            </div>
+        </div>
+    </nav>*@
+   <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary border-bottom box-shadow mb-3" data-bs-theme="dark">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AeroSoft</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
+               
                 </button>
+                @* <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AeroSoft</a>*@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                    <ul class="navbar-nav flex-grow-1"> 
+                       @if ((User.IsInRole("Admin")) || (User.IsInRole("Customer")) )
+                       {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Catalog" asp-action="Index">Catalog</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Catalog" asp-action="Index">Catalog</a>
                         </li>
+                       }
+                        @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="" asp-controller="Orders" asp-action="Index">Admin_Orders</a>
+                        </li>
+                    }
+                        @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="" asp-controller="Manufactures" asp-action="Index">Manufactures</a>
+                        </li>
+                    }
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">Admin_Orders</a>
-                            </li>
-                        }
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Manufactures" asp-action="Index">Manufactures</a>
-                            </li>
-                        }
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Customer" asp-action="Index">Customers</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Customer" asp-action="Index">Customers</a>
                             </li>
 
                         }
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Tracker" asp-action="Index">Tracker</a>
-                        </li>
+                        @if (User.IsInRole("Customer"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="" asp-controller="Tracker" asp-action="Index">Tracker</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="" asp-controller="Manufactures" asp-action="Index">Inventory</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="" asp-controller="Manufactures" asp-action="Index">Shipping</a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -64,8 +141,7 @@
     </div>
     <script src="~/assets/js/main.js" asp-append-version="true"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

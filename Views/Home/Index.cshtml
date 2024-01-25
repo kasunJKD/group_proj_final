@@ -3,7 +3,237 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
+@*<div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https:docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+</div>*@
+@*<header>
+    <!-- Navbar -->
+
+    <!-- Navbar -->
+    <!-- Background image -->
+    <div class="p-5 text-center bg-image"
+         style="
+      background-image: url('https://images.unsplash.com/photo-1569154941061-e231b4725ef1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+
+      height: 800px;
+    ">
+        <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
+            <div class="d-flex justify-content-center align-items-center h-100">
+                <div class="text-white">
+                    <h1 class="mb-3">Raythos Aerospace </h1>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Background image -->
+</header>*@
+<body>
+
+
+
+	<!-- Header -->
+	<div class="header" id="home">
+
+		<!-- Navigation -->
+		<div class="navigation">
+			<nav class="navbar navbar-inverse navbar-default">
+				<div class="container">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						
+						<button class="navbar-toggler" type="button"   aria-label="Toggle navigation">
+							
+						</button>
+					</div>
+					<div id="navbar" class="navbar-collapse collapse">
+						@*<ul class="nav navbar-nav navbar-right">
+							
+
+							
+							@if ((User.IsInRole("Admin")) || (User.IsInRole("Customer")))
+							{
+								<li>
+									<a class="nav-link text-white" asp-area="" asp-controller="Catalog" asp-action="Index">Catalog</a>
+								</li>
+							}
+							@if (User.IsInRole("Admin"))
+							{
+								
+							
+							<li>
+								<a class="nav-link text-white" asp-area="" asp-controller="Orders" asp-action="Index">Admin_Orders</a>
+								</li>
+							}
+							 @if (User.IsInRole("Admin"))
+							 {
+							<li>
+									<a class="nav-link text-white" asp-area="" asp-controller="Manufactures" asp-action="Index">Manufactures</a>
+								</li>
+							}
+							@if (User.IsInRole("Admin"))
+							{
+								<li>
+									<a class="nav-link text-white" asp-area="" asp-controller="Customer" asp-action="Index">Customers</a>
+								</li>
+							}
+							@if (User.IsInRole("Customer"))
+							{
+								<li>
+									<a class="nav-link text-white" asp-area="" asp-controller="Tracker" asp-action="Index">Tracker</a>
+								</li>
+							}
+
+							<li>
+								<a class="nav-link text-white"><partial name="_LoginPartial" /></a>
+								
+							</li>
+							
+						</ul>*@
+
+					</div>
+				</div>
+			</nav>
+		</div>
+		<!-- //Navigation -->
+		<!-- Slider -->
+		<div class="slider w3layouts agileits">
+			<ul class="rslides w3layouts agileits" id="slider">
+				<li>
+					<img src="~/images/slide-1.jpg" alt="W3layouts Agileits">
+					<div class="layer w3layouts agileits"></div>
+				</li>
+				<li>
+					<img src="~/images/slide-2.jpg" alt="W3layouts Agileits">
+					<div class="layer w3layouts agileits"></div>
+				</li>
+				<li>
+					<img src="~/images/slide-3.jpg" alt="W3layouts Agileits">
+					<div class="layer w3layouts agileits"></div>
+				</li>
+				<li>
+					<img src="~/images/slide-4.jpg" alt="W3layouts Agileits">
+					<div class="layer w3layouts agileits"></div>
+				</li>
+				<li>
+					<img src="~/images/slide-5.jpg" alt="W3layouts Agileits">
+					<div class="layer w3layouts agileits"></div>
+				</li>
+			</ul>
+		</div>
+		<!-- //Slider -->
+
+	</div>
+	<!-- //Header -->
+	<!-- About -->
+	
+			<!-- //Tabs -->
+			<!-- Stats -->
+			
+
+			
+		
+	<!-- //Footer -->
+	<!-- Custom-JavaScript-File-Links -->
+	<!-- Default-JavaScript -->
+	<script type="text/javascript" src="~/js/jquery-2.1.4.min.js"></script>
+
+	<!-- Slider-JavaScript -->
+	<script src="~/js/responsiveslides.min.js"></script>
+	<script>
+		$(function () {
+			$("#slider, #slider1").responsiveSlides({
+				auto: false,
+				nav: true,
+				speed: 1500,
+				namespace: "callbacks",
+				pager: true,
+			});
+		});
+	</script>
+	<!-- //Slider-JavaScript -->
+	<!-- Horizontal-Tabs-JavaScript -->
+	<script src="~/js/easyResponsiveTabs.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('#horizontalTab').easyResponsiveTabs({
+				type: 'default',
+				width: 'auto',
+				fit: true,
+			});
+		});
+	</script>
+	<!-- Horizontal-Tabs-JavaScript -->
+	<!-- Number-Scroller-Effect-JavaScript -->
+	<script type="text/javascript" src="~/js/numscroller-1.0.js"></script>
+	<!-- //Number-Scroller-Effect-JavaScript -->
+	<!-- Tabs-JavaScript -->
+	<script src="~/js/jquery.filterizr.js"></script>
+	<script src="~/js/controls.js"></script>
+	<script type="text/javascript">
+		$(function () {
+			$('.filtr-container').filterizr();
+		});
+	</script>
+	<!-- //Tabs-JavaScript -->
+	<!-- PopUp-Box-JavaScript -->
+	<script src="~/js/jquery.chocolat.js"></script>
+	<script type="text/javascript">
+		$(function () {
+			$('.filtr-item a').Chocolat();
+		});
+	</script>
+	<!-- //PopUp-Box-JavaScript -->
+	<!-- Map-JavaScript -->
+	<script type="text/javascript" src="~/https://maps.googleapis.com/maps/api/js"></script>
+	<script type="text/javascript">
+		google.maps.event.addDomListener(window, 'load', init);
+		function init() {
+			var mapOptions = {
+				zoom: 11,
+				center: new google.maps.LatLng(40.6700, -73.9400),
+				styles: [{ "featureType": "all", "elementType": "labels.text.fill", "stylers": [{ "saturation": 36 }, { "color": "#000000" }, { "lightness": 40 }] }, { "featureType": "all", "elementType": "labels.text.stroke", "stylers": [{ "visibility": "on" }, { "color": "#000000" }, { "lightness": 16 }] }, { "featureType": "all", "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] }, { "featureType": "administrative", "elementType": "geometry.fill", "stylers": [{ "color": "#000000" }, { "lightness": 20 }] }, { "featureType": "administrative", "elementType": "geometry.stroke", "stylers": [{ "color": "#000000" }, { "lightness": 17 }, { "weight": 1.2 }] }, { "featureType": "landscape", "elementType": "geometry", "stylers": [{ "color": "#000000" }, { "lightness": 20 }] }, { "featureType": "poi", "elementType": "geometry", "stylers": [{ "color": "#000000" }, { "lightness": 21 }] }, { "featureType": "road.highway", "elementType": "geometry.fill", "stylers": [{ "color": "#000000" }, { "lightness": 17 }] }, { "featureType": "road.highway", "elementType": "geometry.stroke", "stylers": [{ "color": "#000000" }, { "lightness": 29 }, { "weight": 0.2 }] }, { "featureType": "road.arterial", "elementType": "geometry", "stylers": [{ "color": "#000000" }, { "lightness": 18 }] }, { "featureType": "road.local", "elementType": "geometry", "stylers": [{ "color": "#000000" }, { "lightness": 16 }] }, { "featureType": "transit", "elementType": "geometry", "stylers": [{ "color": "#000000" }, { "lightness": 19 }] }, { "featureType": "water", "elementType": "geometry", "stylers": [{ "color": "#000000" }, { "lightness": 17 }] }]
+			};
+			var mapElement = document.getElementById('map');
+			var map = new google.maps.Map(mapElement, mapOptions);
+			var marker = new google.maps.Marker({
+				position: new google.maps.LatLng(40.6700, -73.9400),
+				map: map,
+			});
+		}
+	</script>
+	<!-- //Map-JavaScript -->
+	<!-- Slide-To-Top JavaScript -->
+	<script type="text/javascript">
+		$(document).ready(function () {
+			var defaults = {
+				containerID: 'toTop',
+				containerHoverID: 'toTopHover',
+				scrollSpeed: 100,
+				easingType: 'linear',
+			};
+			$().UItoTop({ easingType: 'easeOutQuart' });
+		});
+	</script>
+	<a href="#" id="toTop" class="stuoyal3w stieliga" style="display: block;"> <span id="toTopHover" style="opacity: 0;"> </span></a>
+	<!-- //Slide-To-Top JavaScript -->
+	<!-- Smooth-Scrolling-JavaScript -->
+	<script type="text/javascript" src="~/js/move-top.js"></script>
+	<script type="text/javascript" src="~/js/easing.js"></script>
+	<script type="text/javascript">
+		jQuery(document).ready(function ($) {
+			$(".scroll, .navbar li a, .footer li a").click(function (event) {
+				$('html,body').animate({ scrollTop: $(this.hash).offset().top }, 1000);
+			});
+		});
+	</script>
+	<!-- //Smooth-Scrolling-JavaScript -->
+	<!-- Bootstrap-JavaScript -->
+	<script type="text/javascript" src="~/js/bootstrap.min.js"></script>
+</body>
