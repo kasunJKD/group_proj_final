@@ -60,7 +60,7 @@ namespace WebApplication1.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public JsonResult CreateInsertValues([FromBody] Customizations_Input_Extended val, int orderId)
+        public async Task<JsonResult> CreateInsertValues([FromBody] Customizations_Input_Extended val, int orderId)
         {
 
             try
@@ -84,10 +84,12 @@ namespace WebApplication1.Controllers
                         totalUnitPrice += row.UnitPrice;
                     }
                 }
-                 
+
 
                 // Update the order table with the total unit price
-                var order = _context.Order.FirstOrDefault(o => o.Id == val.OrderId);
+                var order = _context.Order
+                    .Include(o => o.OrderedModel) // Include the related data from the 'orderModel' table
+                    .FirstOrDefault(o => o.Id == val.OrderId);
                 double orderTableTotal = order.Total_Price;
 
                 if (order != null)
@@ -112,6 +114,51 @@ namespace WebApplication1.Controllers
 
                     _context.SaveChanges();
 
+                }
+
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        if (val.OrderId != 0)
+                        {
+                            // Update Fuselage Inventory
+                            var inventoryItemFuselage = await _context.Inventory
+                                                                      .FirstOrDefaultAsync(i => i.Id == order.OrderedModel.FuselageInventoryId);
+                            if (inventoryItemFuselage != null)
+                            {
+                                inventoryItemFuselage.AvailableCount = Math.Max(0, inventoryItemFuselage.AvailableCount - 1);
+                            }
+
+                            // Update Wing Inventory
+                            var inventoryItemWing = await _context.Inventory
+                                                                  .FirstOrDefaultAsync(i => i.Id == order.OrderedModel.WingsInventoryId);
+                            if (inventoryItemWing != null)
+                            {
+                                inventoryItemWing.AvailableCount = Math.Max(0, inventoryItemWing.AvailableCount - order.OrderedModel.Wing_Count);
+                            }
+
+                            // Update Engine Inventory
+                            var inventoryItemEngine = await _context.Inventory
+                                                                    .FirstOrDefaultAsync(i => i.Id == order.OrderedModel.EngineInventoryId);
+                            if (inventoryItemEngine != null)
+                            {
+                                inventoryItemEngine.AvailableCount = Math.Max(0, inventoryItemEngine.AvailableCount - order.OrderedModel.Engine_Count);
+                            }
+
+                            // Save the changes once for all updates
+                            await _context.SaveChangesAsync();
+
+                            // Commit the transaction
+                            transaction.Commit();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Rollback the transaction on error
+                        transaction.Rollback();
+                        throw;
+                    }
                 }
 
                 TempData["SuccessMessage"] = "Order submitted successfully.";
