@@ -178,7 +178,7 @@ namespace WebApplication1.Controllers
                 writer.Close();
 
                 var constant = ms.ToArray();
-                return File(constant, "application/vnd", "players.pdf");
+                return File(constant, "application/vnd", "Orders.pdf");
 
             }
         }

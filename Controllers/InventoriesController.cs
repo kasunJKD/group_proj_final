@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -67,6 +69,61 @@ namespace WebApplication1.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(inventory);
+        }
+        public IActionResult GeneratePDFPlayer()
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                Document document = new Document(PageSize.A4, 25, 25, 30, 30);
+                PdfWriter writer = PdfWriter.GetInstance(document, ms);
+                document.Open();
+
+                PdfPTable table = new PdfPTable(6);
+
+
+                PdfPCell cell1 = new PdfPCell(new Phrase("Name"));
+                PdfPCell cell2 = new PdfPCell(new Phrase("AvailableCount"));
+                PdfPCell cell3 = new PdfPCell(new Phrase("Price_Per_Unit"));
+                PdfPCell cell4 = new PdfPCell(new Phrase("CreatedDateTime"));
+                PdfPCell cell5 = new PdfPCell(new Phrase("UpdatedDateTime"));
+                //PdfPCell cell6 = new PdfPCell(new Phrase("Status"));
+                table.AddCell(cell1);
+                table.AddCell(cell2);
+                table.AddCell(cell3);
+                table.AddCell(cell4);
+                table.AddCell(cell5);
+               // table.AddCell(cell6);
+
+                var inventory = _context.Inventory.ToList(); // Make sure you adjust this line to match how you retrieve orders
+
+
+
+                foreach (var item in inventory)
+                {
+                    PdfPCell cell = new PdfPCell(new Phrase(item.Name.ToString()));
+                    PdfPCell celll2 = new PdfPCell(new Phrase(item.AvailableCount.ToString()));
+                    PdfPCell celll3 = new PdfPCell(new Phrase(item.Price_Per_Unit.ToString()));
+                    PdfPCell celll4 = new PdfPCell(new Phrase(item.CreatedDateTime.ToString()));
+                    PdfPCell celll5 = new PdfPCell(new Phrase(item.UpdatedDateTime.ToString()));
+                 //   PdfPCell celll6 = new PdfPCell(new Phrase(item.Status.ToString()));
+
+                    table.AddCell(cell);
+                    table.AddCell(celll2);
+                    table.AddCell(celll3);
+                    table.AddCell(celll4);
+                    table.AddCell(celll5);
+                   // table.AddCell(celll6);
+                }
+
+
+                document.Add(table);
+                document.Close();
+                writer.Close();
+
+                var constant = ms.ToArray();
+                return File(constant, "application/vnd", "Orders.pdf");
+
+            }
         }
 
         // GET: Inventories/Edit/5
